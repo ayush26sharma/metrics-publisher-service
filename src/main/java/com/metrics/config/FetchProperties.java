@@ -13,4 +13,5 @@ import java.util.List;
 public class FetchProperties {
 
     private List<ServiceConfig> services;
+
 }
