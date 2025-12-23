@@ -25,6 +25,33 @@ repositories {
 	maven { url = 'https://repo.spring.io/snapshot' }
 }
 
+plugins {
+	id 'java'
+	id 'maven-publish' // 1. Add this plugin
+}
+
+group = 'com.yourorg.metrics'
+version = '1.0.0'
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java // 2. Tell Gradle what to publish
+		}
+	}
+
+	repositories {
+		maven {
+			name = "GitHubPackages" // Or "Nexus", "Artifactory"
+			url = uri("https://maven.pkg.github.com/OWNER/REPO")
+			credentials {
+				username = System.getenv("GITHUB_ACTOR")
+				password = System.getenv("GITHUB_TOKEN")
+			}
+		}
+	}
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
