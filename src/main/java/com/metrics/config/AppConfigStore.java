@@ -23,4 +23,5 @@ public class AppConfigStore {
 
     @Value("${check.metricSeriesLimit}")
     public int metricSeriesLimit;
+
 }
