@@ -6,6 +6,7 @@ import com.metrics.exceptions.MetricFlushException;
 import com.metrics.models.check.ProcessedMetric;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.Instant;
@@ -14,6 +15,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.ReentrantLock;
+
+import static com.metrics.constants.Constants.KafkaConstants.METRICS_PROCESSED_TOPIC;
 
 
 @Component
@@ -29,6 +32,8 @@ public class StoreConsumer {
     private volatile Instant lastFlush = Instant.now();
     private final ReentrantLock flushLock = new ReentrantLock();
 
+
+    @KafkaListener(topics = METRICS_PROCESSED_TOPIC, groupId = "metrics-store")
     public void consume(String message) throws Exception {
         ProcessedMetric metric = objectMapper.readValue(message, ProcessedMetric.class);
         buffer.add(metric);
@@ -43,6 +48,8 @@ public class StoreConsumer {
         }
     }
 
+
+//  @Scheduled(fixedRate = 2000)
     private void flush() {
         List<ProcessedMetric> batch = new ArrayList<>();
         ProcessedMetric m;
