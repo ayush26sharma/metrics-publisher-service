@@ -37,7 +37,7 @@ fetch:
 
 check:
   labelSizeLimit: 50
-  metricSeriesLimit: 1000
+  metricSeriesLimit: 500
 
 store:
   flushBatchSize: 500
